@@ -32,15 +32,16 @@ public final class SumWorker implements Callable<BigInteger> {
         BigInteger result;
         try (FileInputStream fis = new FileInputStream(this.fileName);
                 BufferedInputStream bis = new BufferedInputStream(fis)) {
-            bis.skip(off * Common.WORKER_LOAD);
+            bis.skip(off * Common.WORKER_LOAD * Common.SIZE_OF_INT);
             result = BigInteger.ZERO;
             int endOfPart = 0;
-            byte[] barray = new byte[4];
+            byte[] barray = new byte[Common.SIZE_OF_INT];
             while (bis.read(barray, 0, Common.SIZE_OF_INT) != -1 && endOfPart < Common.WORKER_LOAD) {
                 int gettedData = Common.my_bb_to_int_le(barray);
                 result = result.add(BigInteger.valueOf(gettedData));
-                endOfPart += 4;
-            }          }
+                endOfPart++;
+            }
+        }
         return result;
     }
 
