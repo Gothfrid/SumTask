@@ -18,8 +18,8 @@ import task.Common;
 public class DataGenerator {
      public static void main(String[] args) throws IOException {
          try (DataOutputStream outputStream = new DataOutputStream(new FileOutputStream("sample.data"))) {
-             for (int i = 0; i < 1001; i++) {
-                 int j = ThreadLocalRandom.current().nextInt(1, 2 + 1);
+             for (int i = 0; i < 50000000; i++) {
+                 int j = ThreadLocalRandom.current().nextInt(1, 100 + 1);
                  outputStream.write(Common.my_int_to_bb_le(j));
              }}
 
