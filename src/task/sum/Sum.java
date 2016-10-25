@@ -36,32 +36,28 @@ public class Sum {
      * @throws java.util.concurrent.ExecutionException
      */
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-
+        if (args.length < 1) {
+            exitWithReason("Provide file name");
+        }
         String fileName = args[0];
         System.out.println(fileName);
         long sizeOfFile = 0;
-        try {
-            FileInputStream fis = new FileInputStream(fileName);
+        try (FileInputStream fis = new FileInputStream(fileName)) {
             sizeOfFile = fis.getChannel().size();
             System.out.println(sizeOfFile);
             long nR = 0;
-            if (sizeOfFile % Common.SIZE_OF_INT == 0) {
+            if ((sizeOfFile != 0) && (sizeOfFile % Common.SIZE_OF_INT == 0)) {
                 nR = sizeOfFile / Common.SIZE_OF_INT;
             } else {
-                System.out.println("Malformed Input");
-                System.exit(0);
+                exitWithReason("Malformed Input");
+
             }
-            fis.close();
         } catch (IOException e) {
-            System.out.println("File not found or failed to read");
-            System.exit(0);
+            exitWithReason("File not found or failed to read");
         }
         Collection<Callable<BigInteger>> tasks = new LinkedList<>();
-        //Decide amount of workers -- 1 worker for 10k inputs
-        long workerNumber = sizeOfFile / (Common.WORKER_LOAD * Common.SIZE_OF_INT)
-                + ((Common.WORKER_LOAD % 10000 != 0) ? 0 : 1);
-
-        System.out.println("Worker Number - " + workerNumber);
+        //Decide amount of workers -- 1 worker for 100k inputs
+        long workerNumber = (long) Math.ceil(sizeOfFile / (Common.WORKER_LOAD * Common.SIZE_OF_INT));
         for (int i = 0; i < workerNumber; i++) {
             tasks.add(new SumWorker(fileName, i));
         }
@@ -73,5 +69,10 @@ public class Sum {
             t = t.add(result.get());
         }
         System.out.println(t);
+    }
+
+    private static void exitWithReason(String str) {
+        System.out.println(str);
+        System.exit(0);
     }
 }
