@@ -15,7 +15,7 @@ import java.nio.ByteOrder;
 public class Common {
 
     public static byte SIZE_OF_INT = 4;
-    public static long WORKER_LOAD = 10000;
+    public static long WORKER_LOAD = 500000;
 
     public static byte[] my_int_to_bb_le(int integerValue) {
         return ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(integerValue).array();
