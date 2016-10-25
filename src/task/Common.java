@@ -24,8 +24,5 @@ public class Common {
     public static int my_bb_to_int_le(byte[] byteBarray) {
         return ByteBuffer.wrap(byteBarray).order(ByteOrder.LITTLE_ENDIAN).getInt();
     }
-    
-    public static void sumMaster(){
-        
-    }
+
 }
